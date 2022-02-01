@@ -1,16 +1,15 @@
 # devinity_recruitment_task
 
-A new Flutter project.
+Deviniti recruitment task
 
-## Getting Started
+Plan:
+1. Set up new project
+2. Reorganize architecture
+3. Prepare template views/pages
+4. Add main page functionalities and add tests
+5. Improve design of main page
+6. Add functionalities of form page and add tests
+7. Improve design of form page
+8. Look through code for possible improvements
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
