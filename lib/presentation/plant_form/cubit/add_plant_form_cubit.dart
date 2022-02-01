@@ -4,6 +4,6 @@ import 'package:injectable/injectable.dart';
 import 'add_plant_form_state.dart';
 
 @injectable
-class AddPlantFormCubit extends Cubit<AddPlantFormState> {
-  AddPlantFormCubit() : super(const Loading());
+class PlantFormPageCubit extends Cubit<PlantFormPageState> {
+  PlantFormPageCubit() : super(const Loading());
 }

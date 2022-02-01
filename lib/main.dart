@@ -1,4 +1,5 @@
 import 'package:devinity_recruitment_task/presentation/home/home_page.dart';
+import 'package:devinity_recruitment_task/presentation/plant_form/plant_form_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomePage(),
+        '/plant-form': (context) => const PlantFormPage(),
+      },
     );
   }
 }

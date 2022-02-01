@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
           const TextField(),
           const SizedBox(height: 50),
           ElevatedButton(
-            onPressed: _onAddPlantTap,
+            onPressed: () => _onAddPlantTap(context),
             child: const Text("+ Add plant"),
           ),
           const SizedBox(height: 50),
@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               itemCount: 10,
-              itemBuilder: (context, index) => const Text("ABC"),
+              itemBuilder: (context, index) => _listItemBuilder(context),
             ),
           )
         ],
@@ -32,7 +32,13 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _onAddPlantTap() {
-    return;
+  GestureDetector _listItemBuilder(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _onEditPlantTap(context),
+      child: const Text("ABC"),
+    );
   }
+
+  void _onAddPlantTap(BuildContext context) => Navigator.pushNamed(context, '/plant-form');
+  void _onEditPlantTap(BuildContext context) => Navigator.pushNamed(context, '/plant-form');
 }
