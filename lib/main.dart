@@ -1,9 +1,19 @@
+import 'package:devinity_recruitment_task/core/infrastructure/injection/injection.dart';
+import 'package:devinity_recruitment_task/domain/plant_service.dart';
 import 'package:devinity_recruitment_task/presentation/home/home_page.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/plant_form_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+const _envKey = "ENV";
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  PlantService().initializeDatabase();
+  configureDependencies(const String.fromEnvironment(_envKey));
+
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
