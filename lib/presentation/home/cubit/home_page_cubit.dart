@@ -18,10 +18,12 @@ class HomePageCubit extends Cubit<HomePageState> {
   }
 
   Future<void> searchPlantByName(String searchText) async {
-    final _result = await _plantService.findByName(searchText);
+    if (searchText.length > 3) {
+      final _result = await _plantService.findByName(searchText);
 
-    if (_result.isNotEmpty) {
-      emit(ShowView(plants: _result));
+      if (_result.isNotEmpty) {
+        emit(ShowView(plants: _result));
+      }
     }
   }
 }

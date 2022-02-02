@@ -70,10 +70,7 @@ class _BodyState extends State<_Body> {
               )
             : const Text(
                 "NO PLANTS YET",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
+                style: TextStyle(fontSize: 20),
               ),
         orElse: () => const SizedBox.shrink(),
       );
