@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 class PlantFormContentController {
   final TextEditingController name = TextEditingController();
   DateTime plantedAt = DateTime.now();
-  PlantType? plantType;
+  PlantType plantType = PlantType.alpines;
 
   Function(PlantFormContent) listener;
 
@@ -30,7 +30,7 @@ class PlantFormContentController {
 
     name.text = plant.name;
     plantedAt = plant.getPlantedTime;
-    plantType = plant.plantType.getPlantType;
+    plantType = plant.plantType.getPlantType!;
   }
 
   PlantFormContent get prepareContent => PlantFormContent(

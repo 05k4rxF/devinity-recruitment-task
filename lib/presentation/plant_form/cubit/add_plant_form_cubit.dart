@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:devinity_recruitment_task/domain/plant.dart';
 import 'package:devinity_recruitment_task/domain/plant_service.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/content_controller/plant_form_content.dart';
 import 'package:injectable/injectable.dart';
-import 'package:devinity_recruitment_task/domain/plant_type.dart';
 
 import 'add_plant_form_state.dart';
 
@@ -21,14 +19,12 @@ class PlantFormPageCubit extends Cubit<PlantFormPageState> {
     emit(const ShowView());
   }
 
-  Future<void> addPlantToDB() async {
+  Future<void> addPlantToDB(PlantFormContent content) async {
     final _plant = _plantFormContent?.toPlantData();
     if (_plant != null) {
-      await _plantService.insertPlan(_plant);
+      await _plantService.insertPlant(_plant);
     }
   }
 
-  void updateDetailsContent(PlantFormContent content) {
-    _plantFormContent = content;
-  }
+  void updatePlantsContent(PlantFormContent content) => _plantFormContent = content;
 }

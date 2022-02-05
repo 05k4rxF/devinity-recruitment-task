@@ -1,8 +1,12 @@
 import 'package:devinity_recruitment_task/core/infrastructure/injection/injection.dart';
+import 'package:devinity_recruitment_task/domain/plant.dart';
+import 'package:devinity_recruitment_task/domain/plant_type.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/content_controller/plant_form_content.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/content_controller/plant_form_content_controller.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/cubit/add_plant_form_cubit.dart';
+import 'package:devinity_recruitment_task/presentation/plant_form/widgets/dropdown_field.dart';
 import 'package:devinity_recruitment_task/shared/dimensions.dart';
+import 'package:devinity_recruitment_task/shared/transform_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -44,13 +48,10 @@ class _BodyState extends State<_Body> {
     final cubit = context.read<PlantFormPageCubit>();
 
     _contentController = PlantFormContentController((content) => _onChangeDetails(content, cubit));
-    // _contentController.updateByPlant(plant);
   }
 
   @override
   void dispose() {
-    final cubit = context.read<PlantFormPageCubit>();
-    _onChangeDetails(_contentController.prepareContent, cubit);
     _contentController.dispose();
     super.dispose();
   }
@@ -65,10 +66,16 @@ class _BodyState extends State<_Body> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text("Plant name"),
-          const TextField(),
+          TextField(
+            controller: _contentController.name,
+          ),
           Spacers.h20,
           const Text("Plant type"),
-          const TextField(),
+          DropdownField<PlantType>(
+            items: _getPlantTypes,
+            onSelect: (plantType) => _contentController.update(plantType: plantType),
+            initialValue: PlantType.alpines,
+          ),
           Spacers.h20,
           const Text("Plant date"),
           Spacers.h10,
@@ -91,6 +98,10 @@ class _BodyState extends State<_Body> {
     );
   }
 
+  List<DropdownItem<PlantType>> get _getPlantTypes {
+    return PlantType.values.map((e) => DropdownItem(data: e, title: e.getString.capitalize())).toList();
+  }
+
   Future<DateTime?> _showDateTimePicker(BuildContext context) {
     return DatePicker.showDatePicker(
       context,
@@ -111,7 +122,8 @@ class _BodyState extends State<_Body> {
   }
 
   void _onSaveTap(BuildContext context, PlantFormPageCubit cubit) {
-    // cubit.addPlantToDB();
+    cubit.addPlantToDB(_contentController.prepareContent);
   }
-  void _onChangeDetails(PlantFormContent content, PlantFormPageCubit cubit) => cubit.updateDetailsContent(content);
+
+  void _onChangeDetails(PlantFormContent content, PlantFormPageCubit cubit) => cubit.updatePlantsContent(content);
 }

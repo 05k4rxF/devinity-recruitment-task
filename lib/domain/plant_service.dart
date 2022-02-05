@@ -19,5 +19,5 @@ class PlantService {
 
   Future<List<Plant>> getAllPlants() async => plantDao.findAllPlants();
 
-  Future<void> insertPlan(Plant plant) async => plantDao.insertPlant(plant);
+  Future<void> insertPlant(Plant plant) async => plantDao.insertPlant(plant);
 }
