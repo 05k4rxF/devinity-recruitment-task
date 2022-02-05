@@ -15,9 +15,14 @@ class PlantService {
     plantDao = database.plantDao;
   }
 
-  Future<List<Plant>> findByName(String searchText) async => plantDao.findPlantsByName(searchText);
+  Future<List<Plant>> findByName(String searchText) async => plantDao.findPlantsByName("%$searchText%");
 
   Future<List<Plant>> getAllPlants() async => plantDao.findAllPlants();
 
   Future<void> insertPlant(Plant plant) async => plantDao.insertPlant(plant);
+
+  Future<void> editPlant({required int id, required Plant plant}) async {
+    await plantDao.deletePlant(id);
+    await plantDao.insertPlant(plant);
+  }
 }

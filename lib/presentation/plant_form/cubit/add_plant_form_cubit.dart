@@ -19,23 +19,29 @@ class PlantFormPageCubit extends Cubit<PlantFormPageState> {
     emit(const ShowView());
   }
 
-  Future<void> addPlantToDB() async {
+  Future<void> addPlantToDB(int? id) async {
     emit(const ShowView(isSaving: true));
+
     if (_plantFormContent?.name == null || _plantFormContent?.name == "") {
       emit(const PresentError("Fields can't be empty"));
     } else {
       if (_plantFormContent != null) {
         final _plant = _plantFormContent!.toPlantData();
-        try {
-          // if (_plant != null) {
-          //   await _plantService.insertPlant(_plant);
-          // }
-          emit(PlantSuccessfulyAdded(_plant));
-        } catch (e) {
-          emit(PresentError(e.toString()));
+        if (id != null) {
+          try {
+            await _plantService.editPlant(id: id, plant: _plant);
+            emit(PlantSuccessfulyEdited(_plant));
+          } catch (e) {
+            emit(PresentError(e.toString()));
+          }
+        } else {
+          try {
+            await _plantService.insertPlant(_plant);
+            emit(PlantSuccessfulyAdded(_plant));
+          } catch (e) {
+            emit(PresentError(e.toString()));
+          }
         }
-      } else {
-        return;
       }
     }
     emit(const ShowView());

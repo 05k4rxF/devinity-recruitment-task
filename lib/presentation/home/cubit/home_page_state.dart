@@ -6,8 +6,6 @@ part 'home_page_state.freezed.dart';
 @freezed
 class HomePageState with _$HomePageState {
   const factory HomePageState.loading() = Loading;
-
-  const factory HomePageState.showView({required List<Plant> plants}) = ShowView;
-
+  const factory HomePageState.showView({required List<Plant> plants, @Default(false) isSearching}) = ShowView;
   const factory HomePageState.presentError({required String message}) = PresentError;
 }

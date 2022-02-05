@@ -7,9 +7,10 @@ import 'package:devinity_recruitment_task/presentation/plant_form/cubit/add_plan
 import 'package:devinity_recruitment_task/presentation/plant_form/cubit/add_plant_form_state.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/widgets/dropdown_field.dart';
 import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
-import 'package:devinity_recruitment_task/shared/extensions/transform_string.dart';
 import 'package:devinity_recruitment_task/shared/ui/widgets/loading_spinner.dart';
-import 'package:devinity_recruitment_task/shared/ui/widgets/snackbar.dart';
+import 'package:devinity_recruitment_task/shared/ui/snackbar.dart';
+import 'package:devinity_recruitment_task/shared/ui/widgets/rounded_button.dart';
+import 'package:devinity_recruitment_task/utils/extensions/transform_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -22,33 +23,41 @@ class PlantFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Plant>? _plants = ModalRoute.of(context)!.settings.arguments as List<Plant>?;
+
     return BlocProvider<PlantFormPageCubit>(
       create: (_) => getIt<PlantFormPageCubit>()..init(),
       child: BlocConsumer<PlantFormPageCubit, PlantFormPageState>(
-        listenWhen: (previous, current) => current is PlantSuccessfulyAdded || current is PresentError,
+        listenWhen: (previous, current) => current is! Loading || current is! ShowView,
         listener: _listener,
         buildWhen: (previous, current) => current is ShowView || current is Loading,
-        builder: (context, state) {
-          return state.maybeMap(
-            loading: (value) => const Center(child: LoadingSpinner()),
-            showView: (value) => Scaffold(
-              appBar: AppBar(
-                title: Text(plant != null ? "Edit Plant Form" : "Add Plant Form"),
-              ),
-              body: const _FormBody(),
-            ),
-            orElse: () => const SizedBox.shrink(),
-          );
-        },
+        builder: (context, state) => _builder(context, state, _plants?.first),
       ),
+    );
+  }
+
+  Widget _builder(BuildContext context, PlantFormPageState state, Plant? plant) {
+    return state.maybeMap(
+      loading: (value) => const Center(child: LoadingSpinner()),
+      showView: (value) => Scaffold(
+        appBar: AppBar(
+          title: Text(plant != null ? "Edit Plant Form" : "Add Plant Form"),
+        ),
+        body: _FormBody(plant: plant),
+      ),
+      orElse: () => const SizedBox.shrink(),
     );
   }
 
   void _listener(BuildContext context, PlantFormPageState state) {
     state.mapOrNull(
       plantSuccessfulyAdded: (state) {
-        showSnackbar(context, "Plant ${state.plant.name} added");
-        Navigator.of(context).pop();
+        showSnackbar(context, "Plant \"${state.plant.name}\" added");
+        Navigator.pushReplacementNamed(context, "/");
+      },
+      plantSuccessfulyEdited: (state) {
+        showSnackbar(context, "Plant \"${state.plant.name}\" edited");
+        Navigator.pushReplacementNamed(context, "/");
       },
       presentError: (state) => showSnackbar(context, state.message),
     );
@@ -57,8 +66,11 @@ class PlantFormPage extends StatelessWidget {
 
 class _FormBody extends StatefulWidget {
   const _FormBody({
+    this.plant,
     Key? key,
   }) : super(key: key);
+
+  final Plant? plant;
 
   @override
   State<_FormBody> createState() => _FormBodyState();
@@ -74,6 +86,7 @@ class _FormBodyState extends State<_FormBody> {
     final cubit = context.read<PlantFormPageCubit>();
 
     _contentController = PlantFormContentController((content) => _onChangeDetails(content, cubit));
+    _contentController.updateByPlant(widget.plant);
   }
 
   @override
@@ -100,7 +113,7 @@ class _FormBodyState extends State<_FormBody> {
           DropdownField<PlantType>(
             items: _getPlantTypes,
             onSelect: (plantType) => _contentController.update(plantType: plantType),
-            initialValue: PlantType.alpines,
+            initialValue: widget.plant?.plantType.getPlantType ?? PlantType.alpines,
           ),
           Spacers.h20,
           const Text("Plant date"),
@@ -108,7 +121,7 @@ class _FormBodyState extends State<_FormBody> {
           GestureDetector(
             onTap: () => _showDateTimePicker(context),
             child: Text(
-              DateFormat('yyyy-MM-dd').format(_date),
+              DateFormat('dd-MM-yyyy').format(_date),
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -120,9 +133,9 @@ class _FormBodyState extends State<_FormBody> {
                 return state.maybeMap(
                   showView: (value) => value.isSaving
                       ? const LoadingSpinner()
-                      : ElevatedButton(
-                          onPressed: () => _onSaveTap(context, cubit),
-                          child: const Text("Save"),
+                      : RoundedButton(
+                          title: "Save",
+                          onPressed: () => _onSaveTap(context, cubit, widget.plant?.id),
                         ),
                   orElse: () => const SizedBox.shrink(),
                 );
@@ -135,7 +148,7 @@ class _FormBodyState extends State<_FormBody> {
   }
 
   List<DropdownItem<PlantType>> get _getPlantTypes {
-    return PlantType.values.map((e) => DropdownItem(data: e, title: e.getString.capitalize())).toList();
+    return PlantType.values.map((e) => DropdownItem(data: e, title: e.getString.capitalize)).toList();
   }
 
   Future<DateTime?> _showDateTimePicker(BuildContext context) {
@@ -157,6 +170,6 @@ class _FormBodyState extends State<_FormBody> {
     });
   }
 
-  void _onSaveTap(BuildContext context, PlantFormPageCubit cubit) => cubit.addPlantToDB();
+  void _onSaveTap(BuildContext context, PlantFormPageCubit cubit, int? id) => cubit.addPlantToDB(id);
   void _onChangeDetails(PlantFormContent content, PlantFormPageCubit cubit) => cubit.updatePlantsContent(content);
 }

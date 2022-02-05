@@ -18,6 +18,8 @@ class Spacers {
   static const Widget h30 = SizedBox(height: Dim.d30);
   static const Widget h50 = SizedBox(height: Dim.d50);
 
+  static const Widget w10 = SizedBox(width: Dim.d10);
+  static const Widget w20 = SizedBox(width: Dim.d20);
   static const Widget w30 = SizedBox(width: Dim.d30);
   static const Widget w50 = SizedBox(width: Dim.d50);
 }

@@ -1,7 +1,10 @@
 import 'package:devinity_recruitment_task/core/infrastructure/injection/injection.dart';
 import 'package:devinity_recruitment_task/presentation/home/cubit/home_page_cubit.dart';
 import 'package:devinity_recruitment_task/presentation/home/cubit/home_page_state.dart';
+import 'package:devinity_recruitment_task/presentation/home/widgets/plant_list_item.dart';
 import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
+import 'package:devinity_recruitment_task/shared/ui/widgets/loading_spinner.dart';
+import 'package:devinity_recruitment_task/shared/ui/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,14 +43,33 @@ class _BodyState extends State<_Body> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dim.d50, vertical: Dim.d50),
-          child: TextField(onChanged: (text) => _searchPlant(cubit, text)),
+          padding: const EdgeInsets.symmetric(horizontal: Dim.d30, vertical: Dim.d20),
+          child: Row(
+            children: [
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    const Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    TextField(
+                      onChanged: (text) => _searchPlant(cubit, text),
+                      decoration: const InputDecoration(
+                        hintText: "Search for a plant",
+                        contentPadding: EdgeInsets.only(left: Dim.d30),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Spacers.w20,
+              RoundedButton(title: "+ Add plant", onPressed: () => _onAddPlantTap(context)),
+            ],
+          ),
         ),
-        ElevatedButton(
-          onPressed: () => _onAddPlantTap(context),
-          child: const Text("+ Add plant"),
-        ),
-        Spacers.h50,
+        Spacers.h30,
         Expanded(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Dim.d30),
@@ -62,27 +84,25 @@ class _BodyState extends State<_Body> {
   }
 
   Widget _builder(HomePageState state) => state.maybeMap(
-        showView: (state) => state.plants.isNotEmpty
-            ? ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: state.plants.length,
-                itemBuilder: (context, index) => _listItemBuilder(context),
-              )
-            : const Text(
-                "NO PLANTS YET",
-                style: TextStyle(fontSize: 20),
-              ),
+        showView: (state) => _buildShowView(state),
         orElse: () => const SizedBox.shrink(),
       );
 
-  Widget _listItemBuilder(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _onEditPlantTap(context),
-      child: const Text("ABC"),
-    );
+  Widget _buildShowView(ShowView state) {
+    if (state.isSearching) {
+      return const LoadingSpinner();
+    } else if (state.plants.isNotEmpty) {
+      return ListView.separated(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        itemCount: state.plants.length,
+        itemBuilder: (context, index) => PlantListItem(plant: state.plants[index]),
+        separatorBuilder: (context, index) => const Divider(),
+      );
+    } else {
+      return const Text("NO PLANTS", style: TextStyle(fontSize: 20));
+    }
   }
 
-  void _onAddPlantTap(BuildContext context) => Navigator.pushNamed(context, '/plant-form');
-  void _onEditPlantTap(BuildContext context) => Navigator.pushNamed(context, '/plant-form');
   void _searchPlant(HomePageCubit cubit, String searchText) => cubit.searchPlantByName(searchText);
+  void _onAddPlantTap(BuildContext context) => Navigator.pushNamed(context, '/plant-form');
 }

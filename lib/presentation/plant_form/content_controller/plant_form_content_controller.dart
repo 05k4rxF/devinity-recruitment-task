@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class PlantFormContentController {
   final TextEditingController name = TextEditingController();
+  int? id;
   DateTime plantedAt = DateTime.now();
   PlantType plantType = PlantType.alpines;
 
@@ -28,6 +29,7 @@ class PlantFormContentController {
   void updateByPlant(Plant? plant) {
     if (plant == null) return;
 
+    id = plant.id;
     name.text = plant.name;
     plantedAt = plant.getPlantedTime;
     plantType = plant.plantType.getPlantType!;

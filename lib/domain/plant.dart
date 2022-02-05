@@ -11,4 +11,5 @@ class Plant {
   Plant({this.id, required this.name, required this.plantType, required this.plantedAt});
 
   DateTime get getPlantedTime => DateTime.fromMillisecondsSinceEpoch(plantedAt);
+  String get initials => (name[0] + name[name.length - 1]).toUpperCase();
 }

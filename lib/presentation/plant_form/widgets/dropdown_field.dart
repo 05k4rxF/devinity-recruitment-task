@@ -8,17 +8,18 @@ class DropdownItem<T> {
 }
 
 class DropdownField<T> extends StatefulWidget {
-  final T initialValue;
-  final List<DropdownItem<T>> items;
-  final Function(T) onSelect;
-  final Color? borderColor;
-
   const DropdownField({
     required this.items,
     required this.onSelect,
     required this.initialValue,
     this.borderColor,
-  });
+    Key? key,
+  }) : super(key: key);
+
+  final T initialValue;
+  final List<DropdownItem<T>> items;
+  final Function(T) onSelect;
+  final Color? borderColor;
 
   @override
   State<DropdownField> createState() => _DropdownFieldState<T>();

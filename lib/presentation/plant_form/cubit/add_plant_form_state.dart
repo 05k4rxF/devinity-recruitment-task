@@ -8,5 +8,6 @@ class PlantFormPageState with _$PlantFormPageState {
   const factory PlantFormPageState.loading() = Loading;
   const factory PlantFormPageState.showView({@Default(false) bool isSaving}) = ShowView;
   const factory PlantFormPageState.plantSuccessfulyAdded(Plant plant) = PlantSuccessfulyAdded;
+  const factory PlantFormPageState.plantSuccessfulyEdited(Plant plant) = PlantSuccessfulyEdited;
   const factory PlantFormPageState.presentError(String message) = PresentError;
 }
