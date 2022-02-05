@@ -1,4 +1,4 @@
-import 'package:devinity_recruitment_task/shared/dimensions.dart';
+import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class DropdownItem<T> {

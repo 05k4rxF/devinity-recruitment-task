@@ -1,7 +1,7 @@
 import 'package:devinity_recruitment_task/core/infrastructure/injection/injection.dart';
 import 'package:devinity_recruitment_task/presentation/home/cubit/home_page_cubit.dart';
 import 'package:devinity_recruitment_task/presentation/home/cubit/home_page_state.dart';
-import 'package:devinity_recruitment_task/shared/dimensions.dart';
+import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
