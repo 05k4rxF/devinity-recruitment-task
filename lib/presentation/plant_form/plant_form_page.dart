@@ -7,14 +7,14 @@ import 'package:devinity_recruitment_task/presentation/plant_form/cubit/add_plan
 import 'package:devinity_recruitment_task/presentation/plant_form/cubit/add_plant_form_state.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/widgets/dropdown_field.dart';
 import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
+import 'package:devinity_recruitment_task/shared/ui/widgets/date_time_field.dart';
+import 'package:devinity_recruitment_task/shared/ui/widgets/input_field.dart';
 import 'package:devinity_recruitment_task/shared/ui/widgets/loading_spinner.dart';
 import 'package:devinity_recruitment_task/shared/ui/snackbar.dart';
 import 'package:devinity_recruitment_task/shared/ui/widgets/rounded_button.dart';
 import 'package:devinity_recruitment_task/utils/extensions/transform_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:intl/intl.dart';
 
 class PlantFormPage extends StatelessWidget {
   final Plant? plant;
@@ -41,7 +41,7 @@ class PlantFormPage extends StatelessWidget {
       loading: (value) => const Center(child: LoadingSpinner()),
       showView: (value) => Scaffold(
         appBar: AppBar(
-          title: Text(plant != null ? "Edit Plant Form" : "Add Plant Form"),
+          title: Text(plant != null ? "Update plant" : "Add plant"),
         ),
         body: _FormBody(plant: plant),
       ),
@@ -78,7 +78,6 @@ class _FormBody extends StatefulWidget {
 
 class _FormBodyState extends State<_FormBody> {
   late PlantFormContentController _contentController;
-  DateTime _date = DateTime.now();
 
   @override
   void initState() {
@@ -105,11 +104,14 @@ class _FormBodyState extends State<_FormBody> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text("Plant name"),
-          TextField(
-            controller: _contentController.name,
+          Spacers.h10,
+          InputField(
+            contentController: _contentController.name,
+            hintText: "Insert plant name",
           ),
           Spacers.h20,
           const Text("Plant type"),
+          Spacers.h10,
           DropdownField<PlantType>(
             items: _getPlantTypes,
             onSelect: (plantType) => _contentController.update(plantType: plantType),
@@ -118,28 +120,12 @@ class _FormBodyState extends State<_FormBody> {
           Spacers.h20,
           const Text("Plant date"),
           Spacers.h10,
-          GestureDetector(
-            onTap: () => _showDateTimePicker(context),
-            child: Text(
-              DateFormat('dd-MM-yyyy').format(_date),
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
+          DateTimeField(onUpdateDate: (newDate) => _contentController.update(plantedAt: newDate)),
           Spacers.h20,
           Center(
             child: BlocBuilder<PlantFormPageCubit, PlantFormPageState>(
               buildWhen: (previous, current) => current is ShowView,
-              builder: (context, state) {
-                return state.maybeMap(
-                  showView: (value) => value.isSaving
-                      ? const LoadingSpinner()
-                      : RoundedButton(
-                          title: "Save",
-                          onPressed: () => _onSaveTap(context, cubit, widget.plant?.id),
-                        ),
-                  orElse: () => const SizedBox.shrink(),
-                );
-              },
+              builder: (context, state) => _buildSaveButton(state, context, cubit),
             ),
           ),
         ],
@@ -147,27 +133,20 @@ class _FormBodyState extends State<_FormBody> {
     );
   }
 
-  List<DropdownItem<PlantType>> get _getPlantTypes {
-    return PlantType.values.map((e) => DropdownItem(data: e, title: e.getString.capitalize)).toList();
-  }
-
-  Future<DateTime?> _showDateTimePicker(BuildContext context) {
-    return DatePicker.showDatePicker(
-      context,
-      showTitleActions: true,
-      minTime: DateTime(2000, 1, 1),
-      maxTime: DateTime.now(),
-      onConfirm: _updatePlantationTime,
-      currentTime: DateTime.now(),
-      locale: LocaleType.pl,
+  Widget _buildSaveButton(PlantFormPageState state, BuildContext context, PlantFormPageCubit cubit) {
+    return state.maybeMap(
+      showView: (value) => value.isSaving
+          ? const LoadingSpinner()
+          : RoundedButton(
+              title: "Save",
+              onPressed: () => _onSaveTap(context, cubit, widget.plant?.id),
+            ),
+      orElse: () => const SizedBox.shrink(),
     );
   }
 
-  void _updatePlantationTime(DateTime date) {
-    setState(() {
-      _date = date;
-      _contentController.update(plantedAt: date);
-    });
+  List<DropdownItem<PlantType>> get _getPlantTypes {
+    return PlantType.values.map((e) => DropdownItem(data: e, title: e.getString.capitalize)).toList();
   }
 
   void _onSaveTap(BuildContext context, PlantFormPageCubit cubit, int? id) => cubit.addPlantToDB(id);

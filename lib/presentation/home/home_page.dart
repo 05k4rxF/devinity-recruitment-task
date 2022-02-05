@@ -3,6 +3,7 @@ import 'package:devinity_recruitment_task/presentation/home/cubit/home_page_cubi
 import 'package:devinity_recruitment_task/presentation/home/cubit/home_page_state.dart';
 import 'package:devinity_recruitment_task/presentation/home/widgets/plant_list_item.dart';
 import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
+import 'package:devinity_recruitment_task/shared/ui/widgets/input_field.dart';
 import 'package:devinity_recruitment_task/shared/ui/widgets/loading_spinner.dart';
 import 'package:devinity_recruitment_task/shared/ui/widgets/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -43,28 +44,26 @@ class _BodyState extends State<_Body> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dim.d30, vertical: Dim.d20),
+          padding: const EdgeInsets.symmetric(horizontal: Dim.d20, vertical: Dim.d20),
           child: Row(
             children: [
               Expanded(
                 child: Stack(
                   alignment: Alignment.centerLeft,
                   children: [
-                    const Icon(
-                      Icons.search,
-                      color: Colors.grey,
+                    const Padding(
+                      padding: EdgeInsets.only(left: Dim.d10),
+                      child: Icon(Icons.search, color: Colors.grey),
                     ),
-                    TextField(
+                    InputField(
+                      hintText: "Search for a plant",
+                      contentPadding: const EdgeInsets.only(left: Dim.d40),
                       onChanged: (text) => _searchPlant(cubit, text),
-                      decoration: const InputDecoration(
-                        hintText: "Search for a plant",
-                        contentPadding: EdgeInsets.only(left: Dim.d30),
-                      ),
                     ),
                   ],
                 ),
               ),
-              Spacers.w20,
+              Spacers.w15,
               RoundedButton(title: "+ Add plant", onPressed: () => _onAddPlantTap(context)),
             ],
           ),
@@ -104,5 +103,8 @@ class _BodyState extends State<_Body> {
   }
 
   void _searchPlant(HomePageCubit cubit, String searchText) => cubit.searchPlantByName(searchText);
-  void _onAddPlantTap(BuildContext context) => Navigator.pushNamed(context, '/plant-form');
+  void _onAddPlantTap(BuildContext context) {
+    FocusScope.of(context).unfocus();
+    Navigator.pushNamed(context, '/plant-form');
+  }
 }

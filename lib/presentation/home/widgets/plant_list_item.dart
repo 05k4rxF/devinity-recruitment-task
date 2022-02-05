@@ -16,40 +16,42 @@ class PlantListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _onEditPlantTap(context, plant),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              plant.initials,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dim.d5),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                plant.initials,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Spacers.w10,
-          Expanded(
-            flex: 4,
-            child: Text(
-              plant.name,
-              style: const TextStyle(fontSize: 15),
+            Spacers.w10,
+            Expanded(
+              flex: 4,
+              child: Text(
+                plant.name,
+                style: const TextStyle(fontSize: 15),
+              ),
             ),
-          ),
-          Spacers.w10,
-          Expanded(
-            flex: 3,
-            child: Text(
-              plant.plantType.capitalize,
-              style: const TextStyle(fontSize: 15),
+            Spacers.w10,
+            Expanded(
+              flex: 3,
+              child: Text(
+                plant.plantType.capitalize,
+                style: const TextStyle(fontSize: 15),
+              ),
             ),
-          ),
-          Spacers.w10,
-          Expanded(
-            flex: 4,
-            child: Text(
-              DateFormat('dd-MM-yyyy').format(plant.getPlantedTime),
-              style: const TextStyle(fontSize: 15),
+            Spacers.w10,
+            Expanded(
+              flex: 4,
+              child: Text(
+                DateFormat('dd-MM-yyyy').format(plant.getPlantedTime),
+                style: const TextStyle(fontSize: 15),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

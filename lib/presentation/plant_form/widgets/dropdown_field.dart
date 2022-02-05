@@ -2,9 +2,10 @@ import 'package:devinity_recruitment_task/shared/theme/dimensions.dart';
 import 'package:flutter/material.dart';
 
 class DropdownItem<T> {
+  const DropdownItem({required this.data, required this.title});
+
   final T data;
   final String title;
-  const DropdownItem({required this.data, required this.title});
 }
 
 class DropdownField<T> extends StatefulWidget {
@@ -12,14 +13,12 @@ class DropdownField<T> extends StatefulWidget {
     required this.items,
     required this.onSelect,
     required this.initialValue,
-    this.borderColor,
     Key? key,
   }) : super(key: key);
 
   final T initialValue;
   final List<DropdownItem<T>> items;
   final Function(T) onSelect;
-  final Color? borderColor;
 
   @override
   State<DropdownField> createState() => _DropdownFieldState<T>();
@@ -39,15 +38,12 @@ class _DropdownFieldState<T> extends State<DropdownField<T>> {
     return Theme(
       data: ThemeData(canvasColor: Colors.white),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Dim.d18,
-          vertical: Dim.d2,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: Dim.d18),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(Dim.d8),
           border: Border.all(
-            color: widget.borderColor ?? Colors.white,
+            color: Colors.grey,
             width: Dim.d1,
           ),
         ),
