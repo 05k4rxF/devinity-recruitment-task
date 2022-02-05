@@ -14,6 +14,7 @@ class Dim {
   static const double d40 = 40;
   static const double d50 = 50;
   static const double d55 = 55;
+  static const double d100 = 100;
 }
 
 class Spacers {

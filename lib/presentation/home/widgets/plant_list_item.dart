@@ -7,10 +7,12 @@ import 'package:intl/intl.dart';
 class PlantListItem extends StatelessWidget {
   const PlantListItem({
     required this.plant,
+    required this.refreshPage,
     Key? key,
   }) : super(key: key);
 
   final Plant plant;
+  final VoidCallback refreshPage;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,6 @@ class PlantListItem extends StatelessWidget {
   }
 
   void _onEditPlantTap(BuildContext context, Plant plant) {
-    Navigator.pushNamed(context, '/plant-form', arguments: [plant]);
+    Navigator.pushNamed(context, '/plant-form', arguments: [plant]).whenComplete(refreshPage);
   }
 }

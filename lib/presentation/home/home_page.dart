@@ -64,7 +64,7 @@ class _BodyState extends State<_Body> {
                 ),
               ),
               Spacers.w15,
-              RoundedButton(title: "+ Add plant", onPressed: () => _onAddPlantTap(context)),
+              RoundedButton(title: "+ Add plant", onPressed: () => _onAddPlantTap(context, cubit)),
             ],
           ),
         ),
@@ -93,8 +93,8 @@ class _BodyState extends State<_Body> {
     } else if (state.plants.isNotEmpty) {
       return ListView.separated(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        itemCount: state.plants.length,
-        itemBuilder: (context, index) => PlantListItem(plant: state.plants[index]),
+        itemCount: state.plants.length + 1,
+        itemBuilder: (context, index) => _buildListItems(state, index),
         separatorBuilder: (context, index) => const Divider(),
       );
     } else {
@@ -102,9 +102,22 @@ class _BodyState extends State<_Body> {
     }
   }
 
+  Widget _buildListItems(ShowView state, int index) {
+    if (state.plants.length == index && state.avaliableResults > state.plants.length) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: Dim.d5, horizontal: Dim.d100),
+        child: RoundedButton(title: "Show more", onPressed: () => context.read<HomePageCubit>().loadMore()),
+      );
+    } else if (state.plants.length == index && state.avaliableResults <= state.plants.length) {
+      return const SizedBox.shrink();
+    } else {
+      return PlantListItem(plant: state.plants[index], refreshPage: context.read<HomePageCubit>().getAllPlants);
+    }
+  }
+
   void _searchPlant(HomePageCubit cubit, String searchText) => cubit.searchPlantByName(searchText);
-  void _onAddPlantTap(BuildContext context) {
+  void _onAddPlantTap(BuildContext context, HomePageCubit cubit) {
     FocusScope.of(context).unfocus();
-    Navigator.pushNamed(context, '/plant-form');
+    Navigator.pushNamed(context, '/plant-form').whenComplete(cubit.getAllPlants);
   }
 }

@@ -53,11 +53,11 @@ class PlantFormPage extends StatelessWidget {
     state.mapOrNull(
       plantSuccessfulyAdded: (state) {
         showSnackbar(context, "Plant \"${state.plant.name}\" added");
-        Navigator.pushReplacementNamed(context, "/");
+        Navigator.pop(context);
       },
       plantSuccessfulyEdited: (state) {
         showSnackbar(context, "Plant \"${state.plant.name}\" edited");
-        Navigator.pushReplacementNamed(context, "/");
+        Navigator.pop(context);
       },
       presentError: (state) => showSnackbar(context, state.message),
     );
