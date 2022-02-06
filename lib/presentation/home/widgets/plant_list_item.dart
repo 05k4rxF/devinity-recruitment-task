@@ -17,7 +17,7 @@ class PlantListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _onEditPlantTap(context, plant),
+      onTap: () => _openEditPage(context, plant),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Dim.d5),
         child: Row(
@@ -58,7 +58,7 @@ class PlantListItem extends StatelessWidget {
     );
   }
 
-  void _onEditPlantTap(BuildContext context, Plant plant) {
+  void _openEditPage(BuildContext context, Plant plant) {
     Navigator.pushNamed(context, '/plant-form', arguments: [plant]).whenComplete(refreshPage);
   }
 }
