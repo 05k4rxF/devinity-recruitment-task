@@ -26,11 +26,11 @@ class PlantFormPage extends StatelessWidget {
     final List<Plant>? _plants = ModalRoute.of(context)!.settings.arguments as List<Plant>?;
 
     return BlocProvider<PlantFormPageCubit>(
-      create: (_) => getIt<PlantFormPageCubit>()..init(),
+      create: (_) => getIt<PlantFormPageCubit>(),
       child: BlocConsumer<PlantFormPageCubit, PlantFormPageState>(
-        listenWhen: (previous, current) => current is! Loading || current is! ShowView,
+        listenWhen: (previous, current) => current is! ShowView,
         listener: _listener,
-        buildWhen: (previous, current) => current is ShowView || current is Loading,
+        buildWhen: (previous, current) => current is ShowView,
         builder: (context, state) => _builder(context, state, _plants?.first),
       ),
     );
@@ -38,7 +38,6 @@ class PlantFormPage extends StatelessWidget {
 
   Widget _builder(BuildContext context, PlantFormPageState state, Plant? plant) {
     return state.maybeMap(
-      loading: (value) => const Center(child: LoadingSpinner()),
       showView: (value) => Scaffold(
         appBar: AppBar(
           title: Text(plant != null ? "Update plant" : "Add plant"),

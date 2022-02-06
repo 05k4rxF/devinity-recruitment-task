@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:devinity_recruitment_task/domain/plant.dart';
 import 'package:devinity_recruitment_task/domain/use_case/get_all_plants_use_case.dart';
 import 'package:devinity_recruitment_task/domain/use_case/get_plant_by_name_use_case.dart';
-import 'package:devinity_recruitment_task/domain/use_case/initialize_database_use_case.dart';
 import 'package:injectable/injectable.dart';
 
 import 'home_page_state.dart';
@@ -11,20 +10,14 @@ const int _elementsPerPage = 10;
 
 @injectable
 class HomePageCubit extends Cubit<HomePageState> {
-  final InitializeDatabaseUseCase _initializeDatabaseUseCase;
   final GetAllPlantsUseCase _getAllPlantsUseCase;
   final GetPlantByNameUseCase _getPlantByNameUseCase;
   List<Plant> _plantsList = [];
   int _elementsOnPage = _elementsPerPage;
 
-  HomePageCubit(
-    this._initializeDatabaseUseCase,
-    this._getAllPlantsUseCase,
-    this._getPlantByNameUseCase,
-  ) : super(const Loading());
+  HomePageCubit(this._getAllPlantsUseCase, this._getPlantByNameUseCase) : super(const Loading());
 
   Future<void> init() async {
-    await _initializeDatabaseUseCase();
     await getAllPlants();
   }
 

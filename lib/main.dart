@@ -1,5 +1,4 @@
 import 'package:devinity_recruitment_task/core/infrastructure/injection/injection.dart';
-import 'package:devinity_recruitment_task/infrastructure/plant_repository.dart';
 import 'package:devinity_recruitment_task/presentation/home/home_page.dart';
 import 'package:devinity_recruitment_task/presentation/plant_form/plant_form_page.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ const _envKey = "ENV";
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  PlantRepositoryImpl().initializeDatabase();
   configureDependencies(const String.fromEnvironment(_envKey));
 
   runApp(

@@ -5,7 +5,6 @@ part 'plant_form_state.freezed.dart';
 
 @freezed
 class PlantFormPageState with _$PlantFormPageState {
-  const factory PlantFormPageState.loading() = Loading;
   const factory PlantFormPageState.showView({@Default(false) bool isSaving}) = ShowView;
   const factory PlantFormPageState.plantSuccessfulyAdded(Plant plant) = PlantSuccessfulyAdded;
   const factory PlantFormPageState.plantSuccessfulyEdited(Plant plant) = PlantSuccessfulyEdited;
