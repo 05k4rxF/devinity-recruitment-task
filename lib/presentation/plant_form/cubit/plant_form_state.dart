@@ -1,7 +1,7 @@
 import 'package:devinity_recruitment_task/domain/plant.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'add_plant_form_state.freezed.dart';
+part 'plant_form_state.freezed.dart';
 
 @freezed
 class PlantFormPageState with _$PlantFormPageState {

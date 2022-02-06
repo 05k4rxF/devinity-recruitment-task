@@ -9,7 +9,7 @@ class HomePageState with _$HomePageState {
   const factory HomePageState.showView({
     required List<Plant> plants,
     required int avaliableResults,
-    @Default(false) isSearching,
+    required bool isSearching,
   }) = ShowView;
   const factory HomePageState.presentError({required String message}) = PresentError;
 }

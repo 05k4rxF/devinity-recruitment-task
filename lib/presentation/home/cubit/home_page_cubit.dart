@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:devinity_recruitment_task/domain/plant.dart';
-import 'package:devinity_recruitment_task/domain/plant_service.dart';
+import 'package:devinity_recruitment_task/domain/use_case/get_all_plants_use_case.dart';
+import 'package:devinity_recruitment_task/domain/use_case/get_plant_by_name_use_case.dart';
+import 'package:devinity_recruitment_task/domain/use_case/initialize_database_use_case.dart';
 import 'package:injectable/injectable.dart';
 
 import 'home_page_state.dart';
@@ -9,19 +11,29 @@ const int _elementsPerPage = 10;
 
 @injectable
 class HomePageCubit extends Cubit<HomePageState> {
-  final PlantService _plantService;
+  final InitializeDatabaseUseCase _initializeDatabaseUseCase;
+  final GetAllPlantsUseCase _getAllPlantsUseCase;
+  final GetPlantByNameUseCase _getPlantByNameUseCase;
   List<Plant> _plantsList = [];
   int _elementsOnPage = _elementsPerPage;
 
-  HomePageCubit(this._plantService) : super(const Loading());
+  HomePageCubit(
+    this._initializeDatabaseUseCase,
+    this._getAllPlantsUseCase,
+    this._getPlantByNameUseCase,
+  ) : super(const Loading());
 
   Future<void> init() async {
-    await _plantService.initializeDatabase();
+    await _initializeDatabaseUseCase();
     await getAllPlants();
   }
 
   Future<void> getAllPlants() async {
-    _plantsList = await _plantService.getAllPlants();
+    try {
+      _plantsList = await _getAllPlantsUseCase();
+    } catch (e) {
+      PresentError(message: e.toString());
+    }
     _emitShowView();
   }
 
@@ -30,10 +42,14 @@ class HomePageCubit extends Cubit<HomePageState> {
 
     _emitShowView(isSearching: true);
 
-    if (searchText.isNotEmpty) {
-      _plantsList = await _plantService.findByName(searchText);
-    } else {
-      _plantsList = await _plantService.getAllPlants();
+    try {
+      if (searchText.isNotEmpty) {
+        _plantsList = await _getPlantByNameUseCase(searchText);
+      } else {
+        _plantsList = await _getAllPlantsUseCase();
+      }
+    } catch (e) {
+      PresentError(message: e.toString());
     }
 
     _emitShowView();
